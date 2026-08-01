@@ -48,7 +48,7 @@ def visit_main_site(request:Request, short_url:str,db:Session=Depends(get_db)):
      
     if not query_links:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"{short_url} is not found")
-    query_clicks = db.query(models.Clicks).join(models.Links).filter(models.Links.short_url == short_url).count()
+    
     new_click = models.Clicks(
         ip_address = request.client.host,
         link_id = query_links.id
@@ -56,4 +56,4 @@ def visit_main_site(request:Request, short_url:str,db:Session=Depends(get_db)):
     db.add(new_click)
     db.commit()
 
-    return RedirectResponse(query_links.original_url,query_clicks)
+    return RedirectResponse(query_links.original_url)

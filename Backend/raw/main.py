@@ -1,7 +1,7 @@
 from fastapi import FastAPI,Response
 from . import models
 from .database import engine
-from .routes import auth,users,url
+from .routes import auth,users,url,clicks
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -11,6 +11,7 @@ app = FastAPI()
 app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(url.router)
+app.include_router(clicks.router)
 
 app.add_middleware(
     CORSMiddleware,
