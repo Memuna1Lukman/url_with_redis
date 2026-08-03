@@ -1,8 +1,15 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import muna from '../asserts/muna.png';
+import {useAuth} from '../Hooks/useAuth.jsx'; 
+
 
 export default function NavBar() {
+  const {user} = useAuth()
+  // i wajt to add the username
+  // const handleLayout = async (){
+  //   await log
+  // }
   const getNavClass = ({ isActive }) => {
     const baseClassName =
       'px-3 py-1.5 text-sm font-medium transition-all duration-200 relative';
@@ -46,7 +53,7 @@ export default function NavBar() {
           <div className="flex items-center gap-2.5 bg-purple-50/80 hover:bg-purple-100/70 border border-purple-100/80 rounded-full pl-1.5 pr-4 py-1 transition-all cursor-pointer">
         
             <span className="text-sm font-medium text-purple-950">
-              Memuna
+              {user?.username || 'Guest'}
             </span>
           </div>
 

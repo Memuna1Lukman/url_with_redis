@@ -4,7 +4,7 @@ export default function UrlCard() {
   return (
     <div className="w-full max-w-3xl mx-auto mt-4 px-4">
       {/* Main Card Container */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white border border-purple-100/80 p-3 rounded-[1.5rem] shadow-sm hover:shadow-md transition-shadow">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white border border-purple-100/80 p-3 rounded-3xl  shadow-sm hover:shadow-md transition-shadow">
         
         {/* Input & Copy Button Wrapper */}
         <div className="flex w-full items-center justify-between bg-purple-50/50 rounded-xl border border-purple-100/50 p-1.5 flex-1 focus-within:ring-2 focus-within:ring-purple-400/30 transition-all">

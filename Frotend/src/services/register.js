@@ -1,6 +1,6 @@
-API_URL = 'http://localhost:8000'
+const API_URL = 'http://localhost:8000'
 
-async function createUsers(data){
+export async function createUsers(data){
     try{
         const response = await fetch (`${API_URL}/users/`,{
         method: 'POST',
@@ -26,7 +26,7 @@ async function createUsers(data){
     }
 }
 
-async function loginUser(data){
+export async function loginUser(data){
     try{
         const response = await fetch(`${API_URL}/auth/login/`,{
             method: 'POST',
@@ -53,3 +53,12 @@ async function loginUser(data){
     }
 }
 
+ export async function getMe(){
+    const response = await fetch(`${API_URL}/users/me`,{
+        method: 'GET',
+        headers: 'include'
+    })
+    const data = await response.json()
+    if(!response.ok) throw new Error ('Session expired');
+    return data
+}
