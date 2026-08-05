@@ -1,15 +1,17 @@
 import React from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import muna from '../asserts/muna.png';
 import {useAuth} from '../Hooks/useAuth.jsx'; 
 
 
 export default function NavBar() {
-  const {user} = useAuth()
+  const {user,logout} = useAuth()
+  const navigate = useNavigate()
   // i wajt to add the username
-  // const handleLayout = async (){
-  //   await log
-  // }
+  const handleLogout = async () => {
+      await logout()
+      navigate('/login')
+  }
   const getNavClass = ({ isActive }) => {
     const baseClassName =
       'px-3 py-1.5 text-sm font-medium transition-all duration-200 relative';
@@ -57,12 +59,11 @@ export default function NavBar() {
             </span>
           </div>
 
-          <NavLink
-            to="/logout"
-            className="text-xs font-semibold text-purple-600 hover:text-purple-800 bg-purple-100/50 hover:bg-purple-100 px-3 py-2 rounded-full transition-all"
-          >
-            Logout
-          </NavLink>
+         {
+          user && (
+            <button onClick={handleLogout} className="text-xs font-semibold text-purple-600 hover:text-purple-800 bg-purple-100/50 hover:bg-purple-100 px-3 py-2 rounded-full transition-all">Logout</button>
+          )
+         }
         </div>
 
       </nav>

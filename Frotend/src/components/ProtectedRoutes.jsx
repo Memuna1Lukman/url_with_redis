@@ -10,7 +10,7 @@ export default function ProtectedRoutes({children}) {
         return <div className="min-h-screen flex items-center justify-center">Loading session...</div>;
     }
     if (!user) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/signup" replace />;
     }
   return (
     children

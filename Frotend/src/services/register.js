@@ -7,58 +7,86 @@ export async function createUsers(data){
         headers: {
             'Content-Type': "application/json"
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
+        credentials: 'include'
     }) 
-    const data = await response.json()
+    const result = await response.json()
     if(!response.ok){
         let regMsg = 'Registration Failed'
-        if(Array.isArray(data.detail)){
-            regMsg = data.detail[0].msg
-        }else if(typeof data.detail === 'string'){
-            regMsg = data.detail
+        if(Array.isArray(result.detail)){
+            regMsg = result.detail[0].msg
+        }else if(typeof result.detail === 'string'){
+            regMsg = result.detail
         }
         throw new Error(regMsg)
     }
-
+    return result;
     }
     catch(err){
-        console.log(err)
+        console.log("the error is",err)
+        throw err
     }
 }
 
 export async function loginUser(data){
     try{
+        const formData = new URLSearchParams();
+        formData.append('username', data.username || data.email);
+        formData.append('password', data.password);
         const response = await fetch(`${API_URL}/auth/login/`,{
             method: 'POST',
             headers:{
-                'Content-Type' : "application/json"
+                'Content-Type' : "application/x-www-form-urlencoded"
             },
-            body:JSON.stringify(data),
+            body:formData.toString(),
             credentials: 'include'
         })
-        const data = await response.json()
+        const result = await response.json()
+        console.log(result)
     if(!response.ok){
         let logMsg = 'Login Failed'
-        if(Array.isArray(data.detail)){
-            logMsg = data.detail[0].msg
-        }else if(typeof data.detail === 'string'){
-            logMsg = data.detail
+        if(Array.isArray(result.detail)){
+            logMsg = result.detail[0].msg
+        }else if(typeof result.detail === 'string'){
+            logMsg = result.detail
         }
         throw new Error(logMsg)
     }
-
+    return result
     }
     catch(err){
-        console.log(err)
+        console.log("the error is",err)
+        throw err
     }
 }
 
- export async function getMe(){
+export async function logoutUser(){
+    try {
+        const response = await fetch(`${API_URL}/auth/logout`,{
+        method: 'POST',
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        credentials: 'include'
+    })
+    if (!response.ok) {
+            throw new Error('Backend logout failed');
+    }
+    return await response.json();
+    }catch(err){
+        console.log("the error is",err)
+        throw err
+    }
+}
+
+export async function getMe(){
     const response = await fetch(`${API_URL}/users/me`,{
         method: 'GET',
-        headers: 'include'
+        credentials: 'include'
     })
-    const data = await response.json()
+    if (response.status === 401) {
+        return null;
+    }
+    const result = await response.json()
+
     if(!response.ok) throw new Error ('Session expired');
-    return data
+    return result
 }

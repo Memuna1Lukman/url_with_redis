@@ -1,5 +1,5 @@
 from fastapi import HTTPException,Depends,status,APIRouter,Response
-from .. import models,utils,schemas
+from .. import models,utils,schemas,oauth
 from ..database import get_db
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
@@ -26,5 +26,11 @@ def create_user(user: schemas.UserCreate,db:Session = Depends(get_db)):
         )
 
 
+@router.get("/me",response_model=schemas.UserResponse)
+def get_me(db:Session = Depends(get_db),get_current = Depends(oauth.get_current_user)):
+    query_users = db.query(models.User).filter(models.User.id == get_current.id).first()
+    if not query_users:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="not found")
+    return query_users
 
     

@@ -1,5 +1,5 @@
 import { useState, useContext,useEffect,createContext } from "react";
-import {loginUser,createUsers,getMe } from '../services/register'
+import {loginUser,createUsers,getMe,logoutUser } from '../services/register'
 
 
 export const AuthContext = createContext();
@@ -8,26 +8,61 @@ export default function AuthProvider({children}) {
     const [user,setUser] = useState(null);
     const [loading,setLoading] = useState(true)
     useEffect(()=>{
+        let isMounted = true;
         setLoading(true)
         getMe()
-        .then ((data)=>setUser(data))
-        .catch(()=>setUser(null))
-        .finally(()=>setLoading(false))
+        .then ((data)=>{
+            if(isMounted) setUser(data)
+        })
+        .catch(()=>{
+            if (isMounted) setUser(null);
+        })
+        .finally(()=>{
+            if (isMounted) setLoading(false);
+        })
+        return () => { isMounted = false; };
     },[])
     const login = async (data)=>{
         try {
-        const userData = await loginUser(data)
-        setUser(userData)
+                setLoading(true)
+                await loginUser(data)
+                const profileData = await getMe()
+
+                setUser(profileData)
+                return profileData
         } catch (err) {
-        throw err; // This forces the error to reach your Login.jsx catch block!
-       }
+            setUser(null);
+            throw err; // This forces the error to reach your Login.jsx catch block!
+       } finally {
+            setLoading(false);
+        }
     }
     const register = async (data)=>{
-        await createUsers(data)
-        await login({"username":data.username,"email" : data.email,"password":data.password})
+        try{
+            setLoading(true);
+            await createUsers(data)
+            await login({ username: data.email, password: data.password });
+        }
+        catch(err){
+            setUser(null)
+            throw err
+        }
+         finally {
+            setLoading(false);
+        }
     }
     const logout = async () =>{
-        setUser(null)
+        try{
+            setLoading(true)
+            await logoutUser()
+
+        }catch(err){
+            console.log("the error is",err)
+            throw err
+        }finally{
+            setUser(user)
+            setLoading(false)
+        }
     }
 
   return (

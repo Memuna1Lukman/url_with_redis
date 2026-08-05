@@ -5,12 +5,13 @@ import UrlForm from '../components/UrlForm'
 import UrlCard from '../components/UrlCard'
 
 export default function Home() {
+
   return (
     <div>
         
-        <NavBar />
-          <UrlForm/>
-          {/* <UrlCard/> */}
+       
+        <UrlForm/>
+          
         <Footer/>
     </div>
   )

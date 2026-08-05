@@ -14,6 +14,7 @@ export default function Register() {
 
     const handleSummit = async (e)=>{
         e.preventDefault()
+        setError("")
         try{
            await register({username,email,password})
            navigate('/')
