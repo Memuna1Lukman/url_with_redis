@@ -24,3 +24,16 @@ async function shortUrl(data){
         console.log(err)
     }
 }
+async function getUrl(){
+    const response = await fetch(`${API_URL}/{short_url}`,{
+        method:'GET',
+        headers: {'Content-Type' : 'application/json'},
+        credentials:"include"
+    })
+    if(response.response == 401){
+        return null
+    }
+    const result= await response.json()
+    if (!response.ok) throw new Error('Session Expired')
+    return result
+}

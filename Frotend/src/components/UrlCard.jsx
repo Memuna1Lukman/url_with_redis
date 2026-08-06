@@ -1,6 +1,9 @@
 import React from 'react';
+import { useShortUrl } from '../Hooks/useShortUrl';
 
 export default function UrlCard() {
+  const {createUrl , getTheUrl } = useShortUrl()
+  
   return (
     <div className="w-full max-w-3xl mx-auto mt-4 px-4">
       {/* Main Card Container */}
