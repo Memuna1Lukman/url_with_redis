@@ -5,7 +5,7 @@ import {shortUrl,getUrl} from '../services/shortUrl'
 export const shortContext = createContext()
 
 
-export function shortProvider({children}){
+export function ShortProvider({children}){
     const [url,setUrl] = useState('')
     const [loading,setLoading] = useState(false)
     const [error,setError] = useState(false)
@@ -15,17 +15,20 @@ export function shortProvider({children}){
        .then((data)=>setUrl(data))
        .catch((data)=>setError(true))
        .finally((data)=>setLoading(false))
-       return url
+       
     },[])
 
     const createUrl = async (data)=>{
         try{
             setLoading(true);
             setError(false);
-            await shortUrl(data)
+            const createdLink = await shortUrl(data)
+            setUrl(createdLink)
+            return createdLink
         }catch(err){
             setError(true);
-            setUrl(null)
+            
+            
             throw err
         }
         finally{
@@ -49,7 +52,7 @@ export function shortProvider({children}){
         }
     }
     return (
-        <shortContext.Provider value={{loading,url,getTheUrl,createUrl}}>
+        <shortContext.Provider value={{loading,url,getTheUrl,createUrl,error}}>
             {children}
         </shortContext.Provider>
       )

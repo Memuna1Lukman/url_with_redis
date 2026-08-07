@@ -1,9 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useShortUrl } from '../Hooks/useShortUrl';
 
 export default function UrlCard() {
-  const {createUrl , getTheUrl } = useShortUrl()
-  
+  const {url, loading } = useShortUrl()
+  const [copied,setCopied] = useState(false)
+  // The API returns one object for POST and an array for GET. Display the
+  // newest item in either shape instead of treating the array as a URL.
+  const currentUrl = Array.isArray(url) ? url[url.length -1] : url
+  const shortUrlString = typeof currentUrl === 'object' && currentUrl != null
+    ? currentUrl.short_url
+    : currentUrl
+
+  const handleCopy = async () => {
+    if (!shortUrlString) return;
+    await navigator.clipboard.writeText(shortUrlString);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };  
+  if (!shortUrlString &&!loading)  return null
   return (
     <div className="w-full max-w-3xl mx-auto mt-4 px-4">
       {/* Main Card Container */}
@@ -14,15 +28,18 @@ export default function UrlCard() {
           
           {/* ReadOnly Input */}
           <input 
+            value={shortUrlString}
+            defaultValue="https://campusvault.com/res/math101"
             readOnly
             type="text"
-            defaultValue="https://campusvault.com/res/math101" // Example placeholder
             className="w-full bg-transparent px-3 py-1 text-sm sm:text-base text-purple-900 font-medium focus:outline-none cursor-default truncate"
           />
           
           {/* Copy Button */}
-          <button className="bg-white hover:bg-purple-100 text-purple-700 border border-purple-200/60 font-semibold text-xs px-4 py-2.5 rounded-lg transition-all shadow-sm active:scale-95 whitespace-nowrap cursor-pointer">
-            Copy
+          <button 
+          onClick={handleCopy}
+          className="bg-white hover:bg-purple-100 text-purple-700 border border-purple-200/60 font-semibold text-xs px-4 py-2.5 rounded-lg transition-all shadow-sm active:scale-95 whitespace-nowrap cursor-pointer">
+            {copied ? "copied":"copy"}
           </button>
           
         </div>

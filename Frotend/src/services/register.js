@@ -43,16 +43,16 @@ export async function loginUser(data){
         })
         const result = await response.json()
         console.log(result)
-    if(!response.ok){
-        let logMsg = 'Login Failed'
-        if(Array.isArray(result.detail)){
-            logMsg = result.detail[0].msg
-        }else if(typeof result.detail === 'string'){
-            logMsg = result.detail
+        if(!response.ok){
+            let logMsg = 'Login Failed'
+            if(Array.isArray(result.detail)){
+                logMsg = result.detail[0].msg
+            }else if(typeof result.detail === 'string'){
+                logMsg = result.detail
+            }
+            throw new Error(logMsg)
         }
-        throw new Error(logMsg)
-    }
-    return result
+        return result
     }
     catch(err){
         console.log("the error is",err)

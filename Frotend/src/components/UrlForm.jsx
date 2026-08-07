@@ -1,6 +1,21 @@
 import React from 'react';
-
+import { useShortUrl } from '../Hooks/useShortUrl';
+import { useState } from 'react';
 export default function UrlForm() {
+  const {error , createUrl } = useShortUrl()
+  const [inputValue, setInputValue] = useState('');
+  const handleChange = async ()=>{
+    if(!inputValue.trim()) return 
+    try{
+      await createUrl({"original_url": inputValue})
+      setInputValue('')
+    }catch(error){
+      console.log("The error is",error)
+    }
+
+
+  }
+
   return (
     <div className="w-full max-w-4xl mx-auto mt-12 px-4 py-8 flex flex-col items-center">
       
@@ -12,6 +27,7 @@ export default function UrlForm() {
           <span className="absolute inset-0 bg-purple-200/80 -rotate-1 rounded-md -z-10"></span>
           Magic
         </span>
+        {error && <p className="text-red-500 text-sm font-medium mb-4">{error}</p>}
       </h1>
 
       {/* Outer rounded container with soft purple backdrop */}
@@ -39,6 +55,8 @@ export default function UrlForm() {
 
           {/* Text Input */}
           <input
+            value={inputValue}
+            onChange={(e)=>setInputValue(e.target.value)}
             placeholder="Paste your URL link ...."
             type="text"
             className="w-full bg-transparent px-2 py-3 text-sm sm:text-base text-gray-800 placeholder-purple-300 focus:outline-none font-medium"
@@ -46,7 +64,9 @@ export default function UrlForm() {
 
           {/* Action Button */}
           <div>
-            <button className="bg-purple-900 hover:bg-purple-950 text-white font-semibold text-sm px-7 py-3.5 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-95 flex items-center gap-2 whitespace-nowrap cursor-pointer">
+            <button 
+            onClick={handleChange}
+            className="bg-purple-900 hover:bg-purple-950 text-white font-semibold text-sm px-7 py-3.5 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-95 flex items-center gap-2 whitespace-nowrap cursor-pointer">
               <span>Create</span>
             </button>
           </div>
