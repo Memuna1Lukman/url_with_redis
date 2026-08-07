@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from ..database import get_db
 from .. import models,schemas,utils,oauth
 from datetime import datetime,timedelta
+from typing import List
 router = APIRouter(
     prefix="/shorturl",
     tags=['URL']
@@ -39,6 +40,13 @@ def create_url (request:Request,url:schemas.UrlCreate,db:Session = Depends(get_d
     db.commit()
     db.refresh(created_url)
     return created_url
+
+@router.get('/',response_model=List[schemas.GetUrl])
+def get_all(db:Session = Depends(get_db),current_id = Depends(oauth.get_current_user)):
+    query_links = db.query(models.Links).filter(models.Links.owner_id == current_id.id ).all()
+    if query_links is None:
+        raise HTTPException(status_code=status.HTTP_204_NO_CONTENT,detail="No content yet")
+    return query_links
 
 
 @router.get("/{short_url}")
