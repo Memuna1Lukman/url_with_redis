@@ -4,8 +4,7 @@ import { useShortUrl } from '../Hooks/useShortUrl';
 export default function UrlCard() {
   const {url, loading } = useShortUrl()
   const [copied,setCopied] = useState(false)
-  // The API returns one object for POST and an array for GET. Display the
-  // newest item in either shape instead of treating the array as a URL.
+  
   const currentUrl = Array.isArray(url) ? url[url.length -1] : url
   const shortUrlString = typeof currentUrl === 'object' && currentUrl != null
     ? currentUrl.short_url

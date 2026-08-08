@@ -40,5 +40,6 @@ export async function getUrl(){
     }
     const result= await response.json()
     if (!response.ok) throw new Error('Session Expired')
+    console.log(result)
     return result
 }

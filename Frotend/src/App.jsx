@@ -6,6 +6,8 @@ import Register from './pages/Register';
 import AuthProvider from './Hooks/useAuth.jsx'; 
 import ProtectedRoutes from './components/ProtectedRoutes';
 import MainLayout from './pages/MainLayout.jsx';
+import Dashboard from './pages/Dashboard.jsx';
+import { ShortProvider } from './Hooks/useShortUrl.jsx';
 
 function App() {
   
@@ -13,21 +15,25 @@ function App() {
 
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-         
-          <Route path="/signup" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route element= {
-            <ProtectedRoutes>
-              <MainLayout />
-            </ProtectedRoutes>
-          }>
-            <Route path="/" element={<Home />} />
-          </Route>
-          <Route path="*" element={<div>Page Not Found</div>} />
-        </Routes>
-      </BrowserRouter>
+      <ShortProvider>
+        <BrowserRouter>
+          <Routes>
+          
+            <Route path="/signup" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route element= {
+              <ProtectedRoutes>
+                <MainLayout />
+              </ProtectedRoutes>
+            }>
+              <Route path="/" element={<Home />} />
+              <Route path='/dashboard' element={<Dashboard/>}/>
+            </Route>
+            <Route path="*" element={<div>Page Not Found</div>} />
+          </Routes>
+        </BrowserRouter>
+      </ShortProvider>
+      
     </AuthProvider>
     
   )
